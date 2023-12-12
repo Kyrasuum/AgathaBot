@@ -6,7 +6,8 @@ import (
 
 type GuildInfo struct {
 	ChannelDM      *string
+	Players        map[string]string
 	RegisteredCmds []*discordgo.ApplicationCommand
 }
 
-var Guilds = map[string]GuildInfo{}
+var Guilds = map[string]*GuildInfo{}

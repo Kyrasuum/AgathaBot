@@ -5,6 +5,7 @@ import (
 
 	"agathabot/internal/commands"
 	"agathabot/internal/guild"
+	"agathabot/internal/player"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -12,13 +13,14 @@ import (
 func GuildCreate(client *discordgo.Session, g *discordgo.GuildCreate) {
 	//register guild
 	channeldm := ""
-	guild.Guilds[g.Guild.ID] = guild.GuildInfo{
+	guild.Guilds[g.Guild.ID] = &guild.GuildInfo{
 		ChannelDM:      &channeldm,
-		RegisteredCmds: make([]*discordgo.ApplicationCommand, len(commands.Cmds)),
+		Players:        map[string]*player.Player{},
+		RegisteredCmds: make([]*discordgo.ApplicationCommand, len(commands.ServCmds)),
 	}
 
 	//register commands for guild
-	for i, cmd := range commands.Cmds {
+	for i, cmd := range commands.ServCmds {
 		reg, err := client.ApplicationCommandCreate(client.State.User.ID, g.Guild.ID, cmd)
 		if err != nil {
 			fmt.Printf("Cannot create '%v' command: %v", cmd.Name, err)

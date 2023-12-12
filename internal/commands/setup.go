@@ -1,14 +1,11 @@
 package commands
 
 import (
-	"fmt"
-
 	"agathabot/internal/guild"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-// All commands registered
 var ()
 
 func setup(client *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -26,13 +23,13 @@ func setup(client *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	fmt.Printf("%+v\n", g)
-	*guild.Guilds[g.ID].ChannelDM = c.ID
-
-	client.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+	err = client.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: "AgathaBot will now DM from this channel",
 		},
 	})
+	if err == nil {
+		*guild.Guilds[g.ID].ChannelDM = c.ID
+	}
 }
